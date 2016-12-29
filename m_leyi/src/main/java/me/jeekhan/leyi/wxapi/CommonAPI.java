@@ -63,17 +63,22 @@ public class CommonAPI {
 			JSONObject json = null;
 			try {
 				//返回格式：{"access_token":"ACCESS_TOKEN","expires_in":7200}
+				//		   {"errcode":40013,"errmsg":"invalid appid"}
 				result = HttpUtils.doGet(url);
 				json = (JSONObject) JSONObject.stringToValue(result);
 			} catch (IOException e) {
 				e.printStackTrace();
-				log.info("ACCESS_TOKEN获取失败：" + e.getMessage());
+				log.info("ACCESS_TOKEN获取失败，出现异常：" + e.getMessage());
 			}
 			if(json != null){
-				ACCESS_TOKEN = (String) json.get("access_token");
-				EXPIRESIN = (long) json.get("expires_in");
-				LASTUPDTIME = System.currentTimeMillis();
-				log.info("ACCESS_TOKEN获取：" + result);
+				if(json.has("access_token")){
+					ACCESS_TOKEN = (String) json.get("access_token");
+					EXPIRESIN = (long) json.get("expires_in");
+					LASTUPDTIME = System.currentTimeMillis();
+					log.info("ACCESS_TOKEN获取返回成功：" + result);
+				}else if(json.has("errcode")){
+					log.info("ACCESS_TOKEN获取返回失败，失败信息：" + result);
+				}
 			}
 		}
 	}

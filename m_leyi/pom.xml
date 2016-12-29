@@ -189,18 +189,6 @@
 	    <artifactId>mail</artifactId>
 	    <version>1.4.7</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
-	<dependency>
-	    <groupId>org.freemarker</groupId>
-	    <artifactId>freemarker</artifactId>
-	    <version>2.3.23</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf-itext5 -->
-	<dependency>
-	    <groupId>org.xhtmlrenderer</groupId>
-	    <artifactId>flying-saucer-pdf-itext5</artifactId>
-	    <version>9.0.8</version>
-	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 	<dependency>
 	    <groupId>org.apache.httpcomponents</groupId>
