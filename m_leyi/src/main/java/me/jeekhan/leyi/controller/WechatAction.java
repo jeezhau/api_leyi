@@ -1,5 +1,11 @@
 package me.jeekhan.leyi.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -22,12 +28,13 @@ public class WechatAction {
 	
 	/**
 	 * 微信服务器验证
-	 * 1. 灏唗oken銆乼imestamp銆乶once涓変釜鍙傛暟杩涜瀛楀吀搴忔帓搴�
-	 * 2. 灏嗕笁涓弬鏁板瓧绗︿覆鎷兼帴鎴愪竴涓瓧绗︿覆杩涜sha1鍔犲瘑
-	 * 3. 寮�鍙戣�呰幏寰楀姞瀵嗗悗鐨勫瓧绗︿覆鍙笌signature瀵规瘮锛屾爣璇嗚璇锋眰鏉ユ簮浜庡井淇�
-	 * @param mode
-	 * @param articleId
-	 * @param map
+	 *1. 将token、timestamp、nonce三个参数进行字典序排序
+	 *2. 将三个参数字符串拼接成一个字符串进行sha1加密
+	 *3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于微信 @param mode
+	 * @param signature
+	 * @param timestamp
+	 * @param nonce
+	 * @param echostr
 	 * @return
 	 */
 	@RequestMapping(value="/wx",method=RequestMethod.GET,params={"signature","timestamp","nonce","echostr"})
@@ -50,10 +57,26 @@ public class WechatAction {
 		return "fail";
 	}
 	
-	@RequestMapping(value="/hl",method=RequestMethod.GET)
+	/**
+	 * 接收消息
+	 * @param is
+	 * @return
+	 */
+	@RequestMapping(value="/wx",method=RequestMethod.POST)
 	@ResponseBody
-	public String test(){
-		return "ok";
+	public String recvMsg(InputStream is) {
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		StringBuffer msg = new StringBuffer("");
+		String line = "";
+		try {
+			while((line = br.readLine()) != null){
+				msg.append(line);
+			}
+			System.out.println(msg.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 }
