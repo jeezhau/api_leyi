@@ -14,8 +14,9 @@ import me.jeekhan.leyi.common.HttpUtils;
  *
  */
 public class CommonAPI {
-	private static String prop_file = "props/WXParam";
-	
+	private static String ACCESS_TOKEN = "";
+	private static long lastUpdTime = System.currentTimeMillis();
+	private static String prop_file = "props/WXParam";	//微信常量配置文件
 	private static  ResourceBundle BUNDLE = ResourceBundle.getBundle(prop_file);
 	
 	/**
