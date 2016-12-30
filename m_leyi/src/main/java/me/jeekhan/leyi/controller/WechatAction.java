@@ -34,9 +34,9 @@ public class WechatAction {
 	
 	/**
 	 * 微信服务器验证
-	 * 1. 灏唗oken銆乼imestamp銆乶once涓変釜鍙傛暟杩涜瀛楀吀搴忔帓搴�
-	 * 2. 灏嗕笁涓弬鏁板瓧绗︿覆鎷兼帴鎴愪竴涓瓧绗︿覆杩涜sha1鍔犲瘑
-	 * 3. 寮�鍙戣�呰幏寰楀姞瀵嗗悗鐨勫瓧绗︿覆鍙笌signature瀵规瘮锛屾爣璇嗚璇锋眰鏉ユ簮浜庡井淇�
+	 * 1. 将token、timestamp、nonce三个参数进行字典序排序
+	 * 2. 将三个参数字符串拼接成一个字符串进行sha1加密
+	 * 3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于微信
 	 * @param mode
 	 * @param articleId
 	 * @param map
