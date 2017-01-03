@@ -191,6 +191,64 @@ public class HttpUtils {
     }
 
     /**
+     * 发送  SSL GET 请求（HTTP）
+     * @param url
+     * @param params
+     * @return
+     */
+    public static String doGetSSL(String url) {
+    	return doGetSSL(url,new HashMap<String, Object>());
+    }
+    
+    /**
+     * 发送  SSL GET 请求（HTTP），K-V形式
+     * @param url
+     * @param params
+     * @return
+     */
+    public static String doGetSSL(String url, Map<String, Object> params) {
+        String apiUrl = url;
+        StringBuffer param = new StringBuffer();
+        int i = 0;
+        for (String key : params.keySet()) {
+            if (i == 0)
+                param.append("?");
+            else
+                param.append("&");
+            param.append(key).append("=").append(params.get(key));
+            i++;
+        }
+        apiUrl += param;
+        String result = null;
+        CloseableHttpClient httpClient = createSSLConnSocketFactory();
+        HttpGet httpGet = new HttpGet(apiUrl);
+        CloseableHttpResponse response = null;
+        try {
+        	httpGet.setConfig(requestConfig);
+            response = httpClient.execute(httpGet);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                return null;
+            }
+            HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                return null;
+            }
+            result = EntityUtils.toString(entity, "utf-8");
+        } catch (Exception e) {
+			e.printStackTrace();
+        } finally {
+            if (response != null) {
+                try {
+                    EntityUtils.consume(response.getEntity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+    /**
      * 发送 SSL POST 请求（HTTPS），K-V形式
      * @param apiUrl API接口URL
      * @param params 参数map

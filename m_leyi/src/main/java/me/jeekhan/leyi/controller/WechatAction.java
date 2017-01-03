@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import me.jeekhan.leyi.common.SunSHAUtils;
-import me.jeekhan.leyi.wxapi.CommonAPI;
+import me.jeekhan.leyi.wxapi.CustomizeMenu;
+import me.jeekhan.leyi.wxapi.WXSysParam;
 /**
  * 微信
  * @author Jee Khan
@@ -46,7 +47,7 @@ public class WechatAction {
 	@ResponseBody
 	public String virifyWXServer(@RequestParam("signature")String signature,@RequestParam("timestamp")String timestamp,
 			@RequestParam("nonce")String nonce, @RequestParam("echostr")String echostr){
-		String token = CommonAPI.getParam("TOKEN");
+		String token = WXSysParam.getParam("TOKEN");
 		String[] arr = {token,timestamp,nonce};
 		Arrays.sort(arr);
 		String strAll = arr[0] + arr[1] + arr[2];
@@ -57,6 +58,8 @@ public class WechatAction {
 			e.printStackTrace();
 		}
 		if(signature.equals(ret)){
+			//创建菜单
+			CustomizeMenu.createMenu();
 			return echostr;
 		}
 		return "fail";
@@ -77,13 +80,6 @@ public class WechatAction {
 			}
 			Document doc = DocumentHelper.parseText(sb.toString());
 			Element xml = doc.getRootElement();
-			/*  URL:http://m.jeekhan.me/leyi4m/wx
-				ToUserName:jee_khan_zhao
-				FromUserName:jee_khan_zhao
-				CreateTime:1231313
-				MsgType:text
-				Content:这个一个测试
-				MsgId:5643535434535*/
             for (Iterator i = xml.elementIterator(); i.hasNext();) {
                 Element node = (Element) i.next();
                 map.put(node.getName(), node.getText());
