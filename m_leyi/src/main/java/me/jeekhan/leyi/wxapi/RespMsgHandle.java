@@ -3,6 +3,12 @@ package me.jeekhan.leyi.wxapi;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import me.jeekhan.leyi.common.HttpUtils;
+
 /**
  * 被动回复消息
  * 当用户发送消息给公众号时（或某些特定的用户操作引发的事件推送时），会产生一个POST请求，开发者可以在响应包中返回特定XML结构，来对该消息进行响应（现支持回复文本、图片、图文、语音、视频、音乐）。
@@ -12,6 +18,7 @@ import java.util.Map;
  */
 public class RespMsgHandle {
 	public static String USER_ID = WXSysParam.getParam("USER_ID");	//公众号
+	private static Logger log = LoggerFactory.getLogger(RespMsgHandle.class);
 
 	/**
 	 * 回复文本消息
@@ -144,5 +151,19 @@ public class RespMsgHandle {
 		return "<xml>" + map.toXml() + "</xml>";
 	}
 	
-
+	/**
+	 * 获取自动回复规则
+	 * http请求方式: GET https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token=ACCESS_TOKEN
+	 * @return
+	 */
+	public static Object uploadVideo(){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/cgi-bin/get_current_autoreply_info?access_token=" + token;
+		log.info("获取自动回复规则（POST）：" + url);
+		String ret = HttpUtils.doGetSSL(url);
+		log.info("获取自动回复规则（POST）返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
 }

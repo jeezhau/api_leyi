@@ -14,14 +14,14 @@ import me.jeekhan.leyi.common.HttpUtils;
  *
  */
 public class CustomServiceAccountHandle {
-	static Logger log = LoggerFactory.getLogger(CustomServiceAccountHandle.class);
+	private static Logger log = LoggerFactory.getLogger(CustomServiceAccountHandle.class);
 	
 	/**
 	 * 添加客服帐号
 	 * http请求方式: POST https://api.weixin.qq.com/customservice/kfaccount/add?access_token=ACCESS_TOKEN
 	 * @return 00-成功，【其他】-失败信息
 	 */
-	protected String addKF(String account,String nickname,String pwd){
+	public static String addKF(String account,String nickname,String pwd){
 		String jsonStr = "{\"kf_account\":\""+ account +"\",\"nickname\":\""+nickname+"\",\"password\":\""+pwd+"\"}";
 		String token = AccessToken.getAccessToken();
 		String url = "https://api.weixin.qq.com/customservice/kfaccount/add?access_token=" + token;
@@ -45,7 +45,7 @@ public class CustomServiceAccountHandle {
 	 * http请求方式: POST https://api.weixin.qq.com/customservice/kfaccount/update?access_token=ACCESS_TOKEN
 	 * @return 00-成功，【其他】-失败信息
 	 */
-	protected String updateKF(String account,String nickname,String pwd){
+	public static String updateKF(String account,String nickname,String pwd){
 		String jsonStr = "{\"kf_account\":\""+ account +"\",\"nickname\":\""+nickname+"\",\"password\":\""+pwd+"\"}";
 		String token = AccessToken.getAccessToken();
 		String url = "https://api.weixin.qq.com/customservice/kfaccount/update?access_token=" + token;
@@ -69,7 +69,7 @@ public class CustomServiceAccountHandle {
 	 * http请求方式: POST https://api.weixin.qq.com/customservice/kfaccount/del?access_token=ACCESS_TOKEN
 	 * @return 00-成功，【其他】-失败信息
 	 */
-	protected Object deleteKF(String account,String nickname,String pwd){
+	public static Object deleteKF(String account,String nickname,String pwd){
 		String jsonStr = "{\"kf_account\":\""+ account +"\",\"nickname\":\""+nickname+"\",\"password\":\""+pwd+"\"}";
 		String token = AccessToken.getAccessToken();
 		String url = "https://api.weixin.qq.com/customservice/kfaccount/del?access_token=" + token;
@@ -96,7 +96,7 @@ public class CustomServiceAccountHandle {
      * http://api.weixin.qq.com/customservice/kfaccount/uploadheadimg?access_token=ACCESS_TOKEN&kf_account=KFACCOUNT
      * @return
 	 */
-	protected Object uploadHeadImg(){
+	public static Object uploadHeadImg(){
 		
 		return null;
 	}
@@ -118,7 +118,7 @@ public class CustomServiceAccountHandle {
      *     ]
      * }
      */
-	protected Object getKFList(){
+	public static Object getKFList(){
 		String token = AccessToken.getAccessToken();
 		String url = "https://api.weixin.qq.com/cgi-bin/customservice/getkflist?access_token=" + token;
 		log.info("获取所有客服账号（GET）：" + url );

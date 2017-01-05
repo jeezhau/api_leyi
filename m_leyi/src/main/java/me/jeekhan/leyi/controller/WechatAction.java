@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import me.jeekhan.leyi.common.SunSHAUtils;
-import me.jeekhan.leyi.wxapi.CustomizeMenu;
+import me.jeekhan.leyi.wxapi.CustomizeMenuHandle;
 import me.jeekhan.leyi.wxapi.WXSysParam;
 /**
  * 微信
@@ -59,7 +59,7 @@ public class WechatAction {
 		}
 		if(signature.equals(ret)){
 			//创建菜单
-			CustomizeMenu.createMenu();
+			CustomizeMenuHandle.createMenu();
 			return echostr;
 		}
 		return "fail";

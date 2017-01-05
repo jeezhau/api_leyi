@@ -172,7 +172,7 @@ public class RecvMsgHandle {
 	 * <Ticket><![CDATA[TICKET]]></Ticket>					二维码的ticket，可用来换取二维码图片 
 	 * </xml>
 	 */
-	public Object recvEventSubscribe(WXMap msgMap){
+	protected Object recvEventSubscribe(WXMap msgMap){
 		
 		return null;
 	}
@@ -181,7 +181,7 @@ public class RecvMsgHandle {
 	 * @param msgMap
 	 * @return
 	 */
-	public Object recvEventUnsubscribe(WXMap msgMap){
+	protected Object recvEventUnsubscribe(WXMap msgMap){
 		
 		return null;
 	}
@@ -199,7 +199,7 @@ public class RecvMsgHandle {
 	 * <Ticket><![CDATA[TICKET]]></Ticket>					二维码的ticket，可用来换取二维码图片
 	 * </xml>
 	 */
-	public Object recvEventScan(WXMap msgMap){
+	protected Object recvEventScan(WXMap msgMap){
 		
 		return null;
 	}
@@ -218,7 +218,7 @@ public class RecvMsgHandle {
 	 * <Precision>119.385040</Precision>					地理位置精度
 	 * </xml>
 	 */
-	public Object recvEventLocation(WXMap msgMap){
+	protected Object recvEventLocation(WXMap msgMap){
 		
 		return null;
 	}
@@ -235,7 +235,7 @@ public class RecvMsgHandle {
 	 * <EventKey><![CDATA[EVENTKEY]]></EventKey>			事件KEY值，与自定义菜单接口中KEY值对应
 	 * </xml>
 	 */
-	public Object recvEventClick(WXMap msgMap){
+	protected Object recvEventClick(WXMap msgMap){
 		
 		return null;
 	}
@@ -253,7 +253,7 @@ public class RecvMsgHandle {
 	 * </xml>
 	 * 	 
 	 */
-	public Object recvEventView(WXMap msgMap){
+	protected Object recvEventView(WXMap msgMap){
 		
 		return null;
 	}
@@ -273,7 +273,7 @@ public class RecvMsgHandle {
 	 * </ScanCodeInfo>						
 	 * </xml>
 	 */
-	public Object recvEventScancodePush(WXMap msgMap){
+	protected Object recvEventScancodePush(WXMap msgMap){
 		
 		return null;
 	}
@@ -282,7 +282,7 @@ public class RecvMsgHandle {
 	 * scancode_waitmsg：扫码推事件且弹出“消息接收中”提示框的事件推送
 	 * 同上
 	 */
-	public Object recvEventScancodeWaitmsg(WXMap msgMap){
+	protected Object recvEventScancodeWaitmsg(WXMap msgMap){
 		
 		return null;
 	}
@@ -305,7 +305,7 @@ public class RecvMsgHandle {
 	 * </SendPicsInfo>
 	 * </xml>
 	 */
-	public Object recvEventPicSysphoto(WXMap msgMap){
+	protected Object recvEventPicSysphoto(WXMap msgMap){
 		
 		return null;
 	}
@@ -314,7 +314,7 @@ public class RecvMsgHandle {
 	 * pic_photo_or_album：弹出拍照或者相册发图的事件推送 
 	 * 同上
 	 */
-	public Object recvEventPicPhotoOralbum(WXMap msgMap){
+	protected Object recvEventPicPhotoOralbum(WXMap msgMap){
 		
 		return null;
 	}
@@ -337,7 +337,7 @@ public class RecvMsgHandle {
 	 * </SendPicsInfo>
 	 * </xml>
 	 */
-	public Object recvEventPicWeixin(WXMap msgMap){
+	protected Object recvEventPicWeixin(WXMap msgMap){
 		
 		return null;
 	}
@@ -359,7 +359,49 @@ public class RecvMsgHandle {
 	 * </SendLocationInfo>
 	 * </xml>
 	 */
-	public Object recvEventLocationSelect(WXMap msgMap){
+	protected Object recvEventLocationSelect(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 事件推送群发结果
+	 * 1、由于群发任务提交后，群发任务可能在一定时间后才完成，因此，群发接口调用时，仅会给出群发任务是否提交成功的提示，若群发任务提交成功，
+	 * 则在群发任务结束时，会向开发者在公众平台填写的开发者URL（callback URL）推送事件。
+	 * 2、由于群发任务彻底完成需要较长时间，将会在群发任务即将完成的时候，就推送群发结果，此时的推送人数数据将会与实际情形存在一定误差 。
+	 * <xml>
+	 * <ToUserName><![CDATA[gh_3e8adccde292]]></ToUserName>		公众号的微信号
+	 * <FromUserName><![CDATA[oR5Gjjl_eiZoUpGozMo7dbBJ362A]]></FromUserName>	公众号群发助手的微信号，为mphelper 
+	 * <CreateTime>1394524295</CreateTime>			创建时间的时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>			消息类型，此处为event 
+	 * <Event><![CDATA[MASSSENDJOBFINISH]]></Event>	事件信息，此处为MASSSENDJOBFINISH 
+	 * <MsgID>1988</MsgID>							群发的消息ID 
+	 * <Status><![CDATA[sendsuccess]]></Status>		群发的结构，为“send success”或“send fail”或“err(num)”。但send success时，也有可能因用户拒收公众号的消息、系统错误等原因造成少量用户接收失败。err(num)是审核失败的具体原因
+	 * <TotalCount>100</TotalCount>					group_id下粉丝数；或者openid_list中的粉丝数 
+	 * <FilterCount>80</FilterCount>				过滤（过滤是指特定地区、性别的过滤、用户设置拒收的过滤，用户接收已超4条的过滤）后，准备发送的粉丝数，原则上，FilterCount = SentCount + ErrorCount 
+	 * <SentCount>75</SentCount>					发送成功的粉丝数 
+	 * <ErrorCount>5</ErrorCount>					发送失败的粉丝数 
+	 * </xml>
+	 */
+	protected Object recvEventMassSendJobFinish(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 事件推送模板消息发送结果
+	 * 在模版消息发送任务完成后，微信服务器会将是否送达成功作为通知
+	 *<xml>
+	 * <ToUserName><![CDATA[gh_7f083739789a]]></ToUserName>		公众号微信号 
+	 * <FromUserName><![CDATA[oia2TjuEGTNoeX76QEjQNrcURxG8]]></FromUserName>	 接收模板消息的用户的openid 
+	 * <CreateTime>1395658920</CreateTime>				创建时间 
+	 * <MsgType><![CDATA[event]]></MsgType>				消息类型是事件 
+	 * <Event><![CDATA[TEMPLATESENDJOBFINISH]]></Event>	事件为模板消息发送结束 
+	 * <MsgID>200163836</MsgID>							消息id 
+	 * <Status><![CDATA[Status]]></Status>				发送状态：success-成功；failed:user block-用户拒收；failed: system failed-其他原因失败 
+	 *</xml>
+	 */
+	protected Object recvEventTemplateSendJobFinish(WXMap msgMap){
 		
 		return null;
 	}

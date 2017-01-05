@@ -17,7 +17,7 @@ import me.jeekhan.leyi.common.HttpUtils;
  *
  */
 public class CustomServiceMsgHandle {
-	static Logger log = LoggerFactory.getLogger(CustomServiceMsgHandle.class);
+	private static Logger log = LoggerFactory.getLogger(CustomServiceMsgHandle.class);
 	
 	/**
 	 * 客服发送文本消息
@@ -27,7 +27,7 @@ public class CustomServiceMsgHandle {
 	 * @param account	客服账号，可为空
 	 * @return	00-成功，【其他】-失败信息
 	 */
-	protected String sendTextMsg(String toUser,String content,String account){
+	public static String sendTextMsg(String toUser,String content,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "text");
@@ -63,7 +63,7 @@ public class CustomServiceMsgHandle {
      * @param account	客服账号，可为空
 	 * @return
 	 */
-	protected Object sendImageMsg(String toUser,String mediaId,String account){
+	public static Object sendImageMsg(String toUser,String mediaId,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "image");
@@ -99,7 +99,7 @@ public class CustomServiceMsgHandle {
 	 * @param account	客服账号，可为空
 	 * @return
 	 */
-	protected Object sendVoiceMsg(String toUser,String mediaId,String account){
+	public static Object sendVoiceMsg(String toUser,String mediaId,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "voice");
@@ -138,7 +138,7 @@ public class CustomServiceMsgHandle {
 	 * @param account		客服账号，可为空
 	 * @return
 	 */
-	protected Object sendVideoMsg(String toUser,String mediaId,String thumbMediaId,String title,String description,String account){
+	public static Object sendVideoMsg(String toUser,String mediaId,String thumbMediaId,String title,String description,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "video");
@@ -181,7 +181,7 @@ public class CustomServiceMsgHandle {
 	 * @param account		客服账号，可为空
 	 * @return
 	 */
-	protected Object sendMusicMsg(String toUser,String title,String description,String musicurl,String hqmusicurl,String thumbMediaId,String account){
+	public static Object sendMusicMsg(String toUser,String title,String description,String musicurl,String hqmusicurl,String thumbMediaId,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "music");
@@ -221,7 +221,7 @@ public class CustomServiceMsgHandle {
 	 * @param account	客服账号，可为空 
 	 * @return
 	 */
-	protected Object sendNewsMsg(String toUser,String mediaId,String account){
+	public static Object sendNewsMsg(String toUser,String mediaId,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "mpnews");
@@ -262,7 +262,7 @@ public class CustomServiceMsgHandle {
 	 * @param account	客服账号，可为空
 	 * @return
 	 */
-	protected Object sendMPNewsMsg(String toUser,List<Map<String,String>> list,String account){
+	public static Object sendMPNewsMsg(String toUser,List<Map<String,String>> list,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "news");
@@ -308,7 +308,7 @@ public class CustomServiceMsgHandle {
      * 	},}
 	 * @return
 	 */
-	protected Object sendWXCardMsg(String toUser,String wxcardInfo,String account){
+	public static Object sendWXCardMsg(String toUser,String wxcardInfo,String account){
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("touser", toUser);
 		jsonObj.put("msgtype", "wxcard");

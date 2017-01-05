@@ -24,8 +24,8 @@ import me.jeekhan.leyi.common.HttpUtils;
  * 例如公众号先后发布了默认菜单，个性化菜单1，个性化菜单2，个性化菜单3。那么当用户进入公众号页面时，将从个性化菜单3开始匹配，如果个性化菜单3匹配成功，则直接返回个性化菜单3，否则继续尝试匹配个性化菜单2，直到成功匹配到一个菜单。
  * 根据上述匹配规则，为了避免菜单生效时间的混淆，决定不予提供个性化菜单编辑API，开发者需要更新菜单时，需将完整配置重新发布一轮
  */
-public class CustomizeMenu {
-	static Logger log = LoggerFactory.getLogger(CustomizeMenu.class);
+public class CustomizeMenuHandle {
+	static Logger log = LoggerFactory.getLogger(CustomizeMenuHandle.class);
 
 
 	/**
@@ -171,7 +171,7 @@ public class CustomizeMenu {
 	/**
 	 * 获取自定义菜单配置
 	 * 本接口将会提供公众号当前使用的自定义菜单的配置，如果公众号是通过API调用设置的菜单，则返回菜单的开发配置，而如果公众号是在公众平台官网通过网站功能发布菜单，则本接口返回运营者设置的菜单配置.
-	 * 本接口与自定义菜单查询接口的不同之处在于，本接口无论公众号的接口是如何设置的，都能查询到接口，而自定义菜单查询接口则仅能查询到使用API设置的菜单配置.
+	 * 本接口与自定义菜单查询接口的不同之处在于，本接口无论公众号的接口是如何设置的，都能查询到，而自定义菜单查询接口则仅能查询到使用API设置的菜单配置.
 	 * 
 	 * http请求方式: GET（请使用https协议）https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=ACCESS_TOKEN
 	 * @return
