@@ -1,9 +1,5 @@
 package me.jeekhan.leyi.wxapi;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,24 +30,19 @@ public class AccessToken {
 			url.replaceAll("APPID", appId).replaceAll("APPSECRET", appSecret);
 			String result = null;
 			JSONObject json = null;
-			try {
-				//返回格式：{"access_token":"ACCESS_TOKEN","expires_in":7200}
-				//		   {"errcode":40013,"errmsg":"invalid appid"}
-				result = HttpUtils.doGet(url);
-				json = new JSONObject(result);
-			} catch (IOException e) {
-				e.printStackTrace();
-				log.info("ACCESS_TOKEN获取失败，出现异常：" + e.getMessage());
-			}
+			//返回格式：{"access_token":"ACCESS_TOKEN","expires_in":7200}
+			//		   {"errcode":40013,"errmsg":"invalid appid"}
+			result = HttpUtils.doGet(url);
+			json = new JSONObject(result);
 			if(json != null){
 				if(json.has("access_token")){
-					ACCESS_TOKEN = (String) json.get("access_token");
-					EXPIRESIN = (long) json.get("expires_in");
+					ACCESS_TOKEN = json.getString("access_token");
+					EXPIRESIN = json.getLong("expires_in");
 					LASTUPDTIME = System.currentTimeMillis();
 					log.info("ACCESS_TOKEN获取返回成功：" + result);
 					return ACCESS_TOKEN;
 				}else if(json.has("errcode")){
-					log.info("ACCESS_TOKEN获取返回失败，失败信息：" + result);
+					log.info("ACCESS_TOKEN获取返回失败，失败信息：" + json.getString("errmsg"));
 				}
 			}
 		}

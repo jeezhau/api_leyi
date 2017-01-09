@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -18,7 +20,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -32,12 +33,19 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContexts;
+import org.apache.http.util.CharsetUtils;
 import org.apache.http.util.EntityUtils;
+
+import me.jeekhan.leyi.wxapi.WXSysParam;
 
 /**
  * HTTP 请求工具类
@@ -45,7 +53,8 @@ import org.apache.http.util.EntityUtils;
  *
  */
 public class HttpUtils {
-    private static RequestConfig requestConfig;		
+    private static RequestConfig requestConfig;	
+    private static String TEMP_FILE_DIR = WXSysParam.getParam("TEMP_FILE_DIR");			//文件临时保存目录
     private static final int MAX_TIMEOUT = 7000;	//连接超时
 
     static {
@@ -66,7 +75,7 @@ public class HttpUtils {
      * @return
      * @throws IOException 
      */
-    public static String doGet(String url) throws IOException {
+    public static String doGet(String url) {
         return doGet(url, new HashMap<String, Object>());
     }
 
@@ -77,7 +86,7 @@ public class HttpUtils {
      * @return
      * @throws IOException 
      */
-    public static String doGet(String url, Map<String, Object> params) throws IOException {
+    public static String doGet(String url, Map<String, Object> params) {
         String apiUrl = url;
         StringBuffer param = new StringBuffer();
         int i = 0;
@@ -94,8 +103,9 @@ public class HttpUtils {
         
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpget = new HttpGet(apiUrl);
-        CloseableHttpResponse response = httpclient.execute(httpget);
-        try {
+        CloseableHttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
@@ -105,9 +115,17 @@ public class HttpUtils {
                     instream.close();
                 }
             }
-        } finally {
-            response.close();
-            httpclient.close();
+        } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+            try {
+				response.close();
+			} catch (IOException e) {
+			}
+            try {
+				httpclient.close();
+			} catch (IOException e) {
+			}
         }
         
         return result;
@@ -391,22 +409,23 @@ public class HttpUtils {
 
 
     /**
-     * SSL 文件上传
+     * SSL 文件上传（POST SSL）
      * @param apiUrl	文件上传URL
      * @param file		需要上传的文件
+     * @param fileField	Form表单中file的名称
      * @param content_type	文件MIME类型
      * @return
      * @throws ClientProtocolException
      * @throws IOException
      */
-	public static String uploadFileSSL(String apiUrl, File file,Map<String,String> paramPairs) throws ClientProtocolException, IOException  {
+	public static String uploadFileSSL(String apiUrl, File file,String fileField,Map<String,String> paramPairs) {
 		CloseableHttpClient httpClient = createSSLConnSocketFactory();
 		CloseableHttpResponse httpResponse = null;
 		HttpPost httpPost = new HttpPost(apiUrl);
 		String httpStr;
 		try {
 			// 实现将请求 的参数封装封装到HttpEntity中。
-	        EntityBuilder entityBuilder = EntityBuilder.create();
+	       /* EntityBuilder entityBuilder = EntityBuilder.create();
 	        entityBuilder.setContentEncoding("utf-8");
 	        entityBuilder.setContentType(ContentType.MULTIPART_FORM_DATA);
 	        List<NameValuePair> pairList = new ArrayList<NameValuePair>(paramPairs.size());
@@ -416,9 +435,18 @@ public class HttpUtils {
             }
 	        entityBuilder.setParameters(pairList);
 	        entityBuilder.setFile(file);
-
+	        HttpEntity reqEntity = entityBuilder.build();*/
+	        FileBody fileBody = new FileBody(file);
+			MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+			entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);// 以浏览器兼容模式运行，防止文件名乱码。
+			entityBuilder.addPart(fileField, fileBody);	//对应服务端类的同名属性<File类型>
+			entityBuilder.setCharset(CharsetUtils.get("UTF-8"));
+			for (Map.Entry<String, String> entry : paramPairs.entrySet()) {
+                entityBuilder.addPart(entry.getKey(), new StringBody(entry.getValue(),ContentType.DEFAULT_TEXT));
+            }
+			HttpEntity reqEntity = entityBuilder.build();
 			httpPost.setConfig(requestConfig);
-			httpPost.setEntity(entityBuilder.build());
+			httpPost.setEntity(reqEntity);
 			httpResponse = httpClient.execute(httpPost);
 			int statusCode = httpResponse.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
@@ -430,6 +458,8 @@ public class HttpUtils {
             }
             httpStr = EntityUtils.toString(entity, "utf-8");
             return httpStr;
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			if (httpResponse != null) {
 				try {
@@ -437,27 +467,30 @@ public class HttpUtils {
 				} catch (Exception e) {
 				}
 			}
-			httpClient.close();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+			}
 		}
+		return null;
 	}
 
     /**
-     * 文件上传
+     * 文件上传（POST）
      * @param apiUrl	文件上传URL
      * @param file		需要上传的文件
+     * @param fileField	Form表单中file的名称 
      * @param content_type	文件MIME类型
      * @return
-     * @throws ClientProtocolException
-     * @throws IOException
      */
-	public static String uploadFile(String apiUrl, File file,Map<String,String> paramPairs) throws ClientProtocolException, IOException  {
+	public static String uploadFile(String apiUrl, File file,String fileField,Map<String,String> paramPairs) {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		CloseableHttpResponse httpResponse = null;
 		HttpPost httpPost = new HttpPost(apiUrl);
 		String httpStr;
 		try {
 			// 实现将请求 的参数封装封装到HttpEntity中。
-	        EntityBuilder entityBuilder = EntityBuilder.create();
+	       /* EntityBuilder entityBuilder = EntityBuilder.create();
 	        entityBuilder.setContentEncoding("utf-8");
 	        entityBuilder.setContentType(ContentType.MULTIPART_FORM_DATA);
 	        List<NameValuePair> pairList = new ArrayList<NameValuePair>(paramPairs.size());
@@ -467,8 +500,18 @@ public class HttpUtils {
             }
 	        entityBuilder.setParameters(pairList);
 	        entityBuilder.setFile(file);
+	        HttpEntity reqEntity = entityBuilder.build();*/
+	        FileBody fileBody = new FileBody(file);
+			MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+			entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);	// 以浏览器兼容模式运行，防止文件名乱码。
+			entityBuilder.addPart(fileField, fileBody);	//对应服务端类的同名属性<File类型>
+			entityBuilder.setCharset(CharsetUtils.get("UTF-8"));
+			for (Map.Entry<String, String> entry : paramPairs.entrySet()) {
+                entityBuilder.addPart(entry.getKey(), new StringBody(entry.getValue(),ContentType.DEFAULT_TEXT));
+            }
+			HttpEntity reqEntity = entityBuilder.build();
 			httpPost.setConfig(requestConfig);
-			httpPost.setEntity(entityBuilder.build());
+			httpPost.setEntity(reqEntity);
 			httpResponse = httpClient.execute(httpPost);
 			int statusCode = httpResponse.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
@@ -480,6 +523,8 @@ public class HttpUtils {
             }
             httpStr = EntityUtils.toString(entity, "utf-8");
             return httpStr;
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			if (httpResponse != null) {
 				try {
@@ -487,22 +532,23 @@ public class HttpUtils {
 				} catch (Exception e) {
 				}
 			}
-			httpClient.close();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+			}
 		}
+		return null;
 	}
 	
 	/**
-	 * 文件下载
+	 * 文件下载（GET）
 	 * @param apiUrl	文件下载路径
 	 * @return
-	 * @throws ClientProtocolException
-	 * @throws IOException
 	 */
-	public static byte[] downloadFile(String apiUrl) throws ClientProtocolException, IOException  {
+	public static File downloadFile(String apiUrl){
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		CloseableHttpResponse httpResponse = null;
 		HttpGet httpGet = new HttpGet(apiUrl);
-		byte[] httpByte;
 		try {
 			httpGet.setConfig(requestConfig);
 			httpResponse = httpClient.execute(httpGet);
@@ -514,11 +560,19 @@ public class HttpUtils {
             if (entity == null) {
                 return null;
             }
-            Header filename= httpResponse.getFirstHeader("filename");
-            Header type = entity.getContentType();
-            long length = entity.getContentLength();
-            httpByte = EntityUtils.toByteArray(entity);
-            return httpByte;
+            InputStream in = entity.getContent();
+            Header fileHead= httpResponse.getFirstHeader("filename");
+            String typeHead = entity.getContentType().getValue();
+            String type = typeHead.substring(typeHead.lastIndexOf("/"));
+            String fileName = UUID.randomUUID().toString() + "." +type;
+            if(fileHead != null){
+            	fileName = fileHead.getValue();
+            }
+            File file = new File(TEMP_FILE_DIR + fileName);
+            FileUtils.copyInputStreamToFile(in, file);
+            return file;
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			if (httpResponse != null) {
 				try {
@@ -526,22 +580,26 @@ public class HttpUtils {
 				} catch (Exception e) {
 				}
 			}
-			httpClient.close();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		return null;
 	}
 	
 	/**
-	 *  SSL 文件下载
+	 *  SSL 文件下载（GET）
 	 * @param apiUrl	文件下载路径
 	 * @return
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static byte[] downloadFileSSL(String apiUrl) throws ClientProtocolException, IOException  {
+	public static File downloadFileSSL(String apiUrl){
 		CloseableHttpClient httpClient = createSSLConnSocketFactory();
 		CloseableHttpResponse httpResponse = null;
 		HttpGet httpGet = new HttpGet(apiUrl);
-		byte[] httpByte;
 		try {
 			httpGet.setConfig(requestConfig);
 			httpResponse = httpClient.execute(httpGet);
@@ -553,11 +611,19 @@ public class HttpUtils {
             if (entity == null) {
                 return null;
             }
-            Header filename= httpResponse.getFirstHeader("filename");
-            Header type = entity.getContentType();
-            long length = entity.getContentLength();
-            httpByte = EntityUtils.toByteArray(entity);
-            return httpByte;
+            InputStream in = entity.getContent();
+            Header fileHead= httpResponse.getFirstHeader("filename");
+            String typeHead = entity.getContentType().getValue();
+            String type = typeHead.substring(typeHead.lastIndexOf("/"));
+            String fileName = UUID.randomUUID().toString() + "." +type;
+            if(fileHead != null){
+            	fileName = fileHead.getValue();
+            }
+            File file = new File(TEMP_FILE_DIR + fileName);
+            FileUtils.copyInputStreamToFile(in, file);
+            return file;
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			if (httpResponse != null) {
 				try {
@@ -565,8 +631,67 @@ public class HttpUtils {
 				} catch (Exception e) {
 				}
 			}
-			httpClient.close();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+			}
 		}
+		return null;
 	}
 	
+	/**
+     * 下载文件（SSL POST），JSON形式参数
+     * @param apiUrl API接口URL
+     * @param json JSON对象
+     * @return
+     * @throws IOException 
+     */
+    public static File downloadFileSSL(String apiUrl, Object json) {
+        CloseableHttpClient httpClient = createSSLConnSocketFactory();
+        HttpPost httpPost = new HttpPost(apiUrl);
+        CloseableHttpResponse response = null;
+        try {
+            httpPost.setConfig(requestConfig);
+            StringEntity stringEntity = new StringEntity(json.toString(),"UTF-8");//解决中文乱码问题
+            stringEntity.setContentEncoding("UTF-8");
+            stringEntity.setContentType("application/json");
+            httpPost.setEntity(stringEntity);
+            response = httpClient.execute(httpPost);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                return null;
+            }
+            HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                return null;
+            }
+            InputStream in = entity.getContent();
+            Header fileHead= response.getFirstHeader("filename");
+            String typeHead = entity.getContentType().getValue();
+            String type = typeHead.substring(typeHead.lastIndexOf("/"));
+            String fileName = UUID.randomUUID().toString() + "." +type;
+            if(fileHead != null){
+            	fileName = fileHead.getValue();
+            }
+            File file = new File(TEMP_FILE_DIR + fileName);
+            FileUtils.copyInputStreamToFile(in, file);
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (response != null) {
+                try {
+                    EntityUtils.consume(response.getEntity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+				httpClient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+        return null;
+    }
 }

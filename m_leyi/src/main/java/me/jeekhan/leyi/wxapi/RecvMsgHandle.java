@@ -405,4 +405,102 @@ public class RecvMsgHandle {
 		
 		return null;
 	}
+	
+	/**
+	 * 资质认证成功（此时立即获得接口权限） 
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[qualification_verify_success]]></Event>	事件类型 qualification_verify_success 
+	 * <ExpiredTime>1442401156</ExpiredTime>				有效期 (整形)，指的是时间戳，将于该时间戳认证过期 
+	 * </xml> 
+	 */
+	protected Object recvQualificationVerifySuccess(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 资质认证失败
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[qualification_verify_fail]]></Event>	事件类型 qualification_verify_fail 
+	 * <FailTime>1442401122</FailTime>						失败发生时间 (整形)，时间戳 
+	 * <FailReason><![CDATA[by time]]></FailReason>			认证失败的原因 
+	 * </xml> 
+	 */
+	protected Object recvQualificationVerifyFail(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 名称认证成功（即命名成功） 
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[naming_verify_success]]></Event>		事件类型 naming_verify_success 
+	 * <ExpiredTime>1442401093</ExpiredTime>				有效期 (整形)，指的是时间戳，将于该时间戳认证过期 
+	 * </xml> 
+	 */
+	protected Object recvNamingVerifySuccess(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 名称认证失败（这时虽然客户端不打勾，但仍有接口权限） 
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[naming_verify_fail]]></Event>		事件类型 naming_verify_fail 
+	 * <FailTime>1442401061</FailTime>						失败发生时间 (整形)，时间戳 
+	 * <FailReason><![CDATA[by time]]></FailReason>			认证失败的原因 
+	 * </xml> 
+	 */
+	protected Object recvNamingVerifyFail(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 年审通知 
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[annual_renew]]></Event>				事件类型 annual_renew，提醒公众号需要去年审了 
+	 * <ExpiredTime>1442401004</ExpiredTime>				有效期 (整形)，指的是时间戳，将于该时间戳认证过期，需尽快年审 
+	 * </xml>
+	 */
+	protected Object recvAnnualRenew(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 认证过期失效通知 
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[verify_expired]]></Event>			事件类型 verify_expired 
+	 * <ExpiredTime>1442400900</ExpiredTime>				有效期 (整形)，指的是时间戳，表示已于该时间戳认证过期，需要重新发起微信认证 
+	 * </xml>
+	 */
+	protected Object recvVerifyExpired(WXMap msgMap){
+		
+		return null;
+	}
 }
