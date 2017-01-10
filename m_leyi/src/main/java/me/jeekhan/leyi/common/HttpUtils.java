@@ -441,9 +441,11 @@ public class HttpUtils {
 			entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);// 以浏览器兼容模式运行，防止文件名乱码。
 			entityBuilder.addPart(fileField, fileBody);	//对应服务端类的同名属性<File类型>
 			entityBuilder.setCharset(CharsetUtils.get("UTF-8"));
-			for (Map.Entry<String, String> entry : paramPairs.entrySet()) {
-                entityBuilder.addPart(entry.getKey(), new StringBody(entry.getValue(),ContentType.DEFAULT_TEXT));
-            }
+			if(paramPairs != null && paramPairs.size()>0){
+				for (Map.Entry<String, String> entry : paramPairs.entrySet()) {
+	                entityBuilder.addPart(entry.getKey(), new StringBody(entry.getValue(),ContentType.DEFAULT_TEXT));
+	            }
+			}
 			HttpEntity reqEntity = entityBuilder.build();
 			httpPost.setConfig(requestConfig);
 			httpPost.setEntity(reqEntity);
@@ -506,9 +508,11 @@ public class HttpUtils {
 			entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);	// 以浏览器兼容模式运行，防止文件名乱码。
 			entityBuilder.addPart(fileField, fileBody);	//对应服务端类的同名属性<File类型>
 			entityBuilder.setCharset(CharsetUtils.get("UTF-8"));
-			for (Map.Entry<String, String> entry : paramPairs.entrySet()) {
-                entityBuilder.addPart(entry.getKey(), new StringBody(entry.getValue(),ContentType.DEFAULT_TEXT));
-            }
+			if(paramPairs != null && paramPairs.size()>0){
+				for (Map.Entry<String, String> entry : paramPairs.entrySet()) {
+	                entityBuilder.addPart(entry.getKey(), new StringBody(entry.getValue(),ContentType.DEFAULT_TEXT));
+	            }
+			}
 			HttpEntity reqEntity = entityBuilder.build();
 			httpPost.setConfig(requestConfig);
 			httpPost.setEntity(reqEntity);

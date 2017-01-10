@@ -503,4 +503,24 @@ public class RecvMsgHandle {
 		
 		return null;
 	}
+	
+	/**
+	 * 订单付款通知
+	 * 在用户在微信中付款成功后，微信服务器会将订单付款通知推送给开发者
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[merchant_order]]></Event>			事件类型 merchant_order 
+	 * <OrderId><![CDATA[test_order_id]]></OrderId>			订单ID
+	 * <OrderStatus>2</OrderStatus>							订单状态
+	 * <ProductId><![CDATA[test_product_id]]></ProductId>	商品ID
+	 * <SkuInfo><![CDATA[10001:1000012;10002:100021]]></SkuInfo>	商品SKU
+	 * </xml>
+	 */
+	protected Object recvMerchantOrder(WXMap msgMap){
+		
+		return null;
+	}
 }
