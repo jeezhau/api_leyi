@@ -523,4 +523,26 @@ public class RecvMsgHandle {
 		
 		return null;
 	}
+	
+	/**
+	 * 买单事件推送
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[user_pay_from_pay_cell]]></Event>	事件类型 user_pay_from_pay_cell
+	 * <CardId><![CDATA[po2VNuCuRo-8sxxxxxxxxxxx]]></CardId>	卡券ID
+	 * <UserCardCode><![CDATA[38050000000]]></UserCardCode>		卡券Code码
+	 * <TransId><![CDATA[10022403432015000000000]]></TransId>	微信支付交易订单号（只有使用买单功能核销的卡券才会出现）
+	 * <LocationId>291710000</LocationId>						门店名称，当前卡券核销的门店名称（只有通过卡券商户助手和买单核销时才会出现） 
+	 * <Fee><![CDATA[10000]]></Fee>								实付金额，单位为分
+	 * <OriginalFee><![CDATA[10000]]> </OriginalFee>			应付金额，单位为分
+	 * </xml>
+	 */
+	protected Object recvUserPay(WXMap msgMap){
+		
+		return null;
+	}
+	
 }
