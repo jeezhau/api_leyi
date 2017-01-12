@@ -545,4 +545,178 @@ public class RecvMsgHandle {
 		return null;
 	}
 	
+	/**
+	 * 用户领取卡券
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[user_get_card]]></Event>				事件类型 user_get_card
+	 *<CardId><![CDATA[cardid]]></CardId> 					卡券ID
+	 *<IsGiveByFriend>1</IsGiveByFriend>					是否为转赠，1代表是，0代表否。 
+	 *<UserCardCode><![CDATA[12312312]]></UserCardCode>		code序列号。自定义code及非自定义code的卡券被领取后都支持事件推送。 
+	 *<OuterId>1</OuterId>									场景值
+	 *</xml>
+	 */
+	protected Object recvUserGetCard(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 卡券审核事件推送
+	 * <xml> 
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event  
+	 * <Event><![CDATA[card_pass_check]]></Event>  			事件类型，card_pass_check(卡券通过审核)、card_not_pass_check（卡券未通过审核） 
+	 * <CardId><![CDATA[cardid]]></CardId> 					卡券ID 
+	 * </xml>
+	 */
+	protected Object recvCardCheck(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 用户删除卡券事件
+	 * <xml>
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[user_del_card]]></Event> 			事件类型，user_del_card(用户删除卡券) 
+	 * <CardId><![CDATA[cardid]]></CardId> 					卡券ID
+	 * <UserCardCode><![CDATA[12312312]]></UserCardCode>	code序列号。自定义code及非自定义code的卡券被领取后都支持事件推送
+	 * </xml>
+	 */
+	protected Object recvUserDelCard(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 核销事件
+	 * <xml> 
+	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
+	 * <CreateTime>1442401156</CreateTime>					消息创建时间 （整型），时间戳 
+	 * <MsgType><![CDATA[event]]></MsgType>					消息类型，event 
+	 * <Event><![CDATA[user_consume_card]]></Event> 		事件类型，user_consume_card(核销事件) 
+	 * <CardId><![CDATA[cardid]]></CardId> 					卡券ID
+	 * <UserCardCode><![CDATA[12312312]]></UserCardCode>	卡券Code码
+	 * <ConsumeSource><![CDATA[(FROM_API)]]></ConsumeSource>	核销来源。支持开发者统计API核销（FROM_API）、公众平台核销（FROM_MP）、卡券商户助手核销（FROM_MOBILE_HELPER）（核销员微信号） 
+	 * <OutTradeNo><![CDATA[aaaaaaaaaaaa]]></OutTradeNo>		
+	 * <TransId><![CDATA[bbbbbbbbbb]]></TransId>				
+	 * <LocationId><![CDATA[222222]]></LocationId>				门店名称，当前卡券核销的门店名称（只有通过卡券商户助手和买单核销时才会出现）
+	 * <StaffOpenId><![CDATA[obLatjjwDolFjRRd3doGIdwNqRXw]></StaffOpenId>	核销该卡券核销员的openid（只有通过卡券商户助手核销时才会出现）
+	 * </xml>
+	 */
+	protected Object recvUserConsumeCard(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 进入会员卡事件
+	 * <xml> 
+	 * <ToUserName><![CDATA[toUser]]></ToUserName> 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName> 
+	 * <CreateTime>123456789</CreateTime> 
+	 * <MsgType><![CDATA[event]]></MsgType> 
+	 * <Event><![CDATA[user_view_card]]></Event> 	事件类型，user_view_card(核销事件) 
+	 * <CardId><![CDATA[cardid]]></CardId> 			卡券ID
+	 * <UserCardCode><![CDATA[12312312]]></UserCardCode>	商户自定义code值。非自定code推送为空串
+	 * </xml>
+	 */
+	protected Object recvUserViewCard(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 从卡券进入公众号会话事件
+	 * 用户在卡券里点击查看公众号进入会话时（需要用户已经关注公众号），微信会把这个事件推送
+	 * <xml> 
+	 * <ToUserName><![CDATA[toUser]]></ToUserName> 
+	 * <FromUserName><![CDATA[FromUser]]></FromUserName> 
+	 * <CreateTime>123456789</CreateTime> 
+	 * <MsgType><![CDATA[event]]></MsgType> 
+	 * <Event><![CDATA[user_enter_session_from_card]]></Event> 事件类型，user_enter_session_from_card(用户从卡券进入公众号会话)
+	 * <CardId><![CDATA[cardid]]></CardId> 					卡券ID
+	 * <UserCardCode><![CDATA[12312312]]></UserCardCode>	Code码
+	 * </xml>
+	 */
+	protected Object recvUserEnterSessionFromCard(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 会员卡内容更新事件
+	 * 当用户的会员卡积分余额发生变动时，微信会推送事件告知开发者
+	 * <xml><ToUserName><![CDATA[gh_9e1765b5568e]]></ToUserName>
+	 * <FromUserName><![CDATA[ojZ8YtyVyr30HheH3CM73y7h4jJE]]></FromUserName>
+	 * <CreateTime>1445507140</CreateTime>
+	 * <MsgType><![CDATA[event]]></MsgType>
+	 * <Event><![CDATA[update_member_card]]></Event>	事件类型，update_member_card(用户从卡券进入公众号会话)
+	 * <CardId><![CDATA[pjZ8Ytx-nwvpCRyQneH3Ncmh6N94]]></CardId>	卡券ID
+	 * <UserCardCode><![CDATA[485027611252]]></UserCardCode>	Code码
+	 * <ModifyBonus>3</ModifyBonus>			变动的积分值
+	 * <ModifyBalance>0</ModifyBalance>		变动的余额值
+	 * </xml>
+	 */
+	protected Object recvUpdateMemberCard(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 库存报警事件
+	 * 用户领券时，若此时库存数小于预警值（默认为100），会发送事件给商户，事件每隔12小时发送一次
+	 * <xml>
+	 * <ToUserName><![CDATA[gh_2d62d*****0]]></ToUserName>
+	 * <FromUserName><![CDATA[oa3LFuBvWb7*********]]></FromUserName> 
+	 * <CreateTime>1443838506</CreateTime>
+	 * <MsgType><![CDATA[event]]></MsgType>
+	 * <Event><![CDATA[card_sku_remind]]></Event>		事件类型，card_sku_remind库存报警 
+	 * <CardId><![CDATA[pa3LFuAh2P65**********]]></CardId>	卡券ID 
+	 * <Detail><![CDATA[the card's quantity is equal to 0]]></Detail>	报警详细信息 
+	 * </xml>
+	 */
+	protected Object recvCardSkuRemind(WXMap msgMap){
+		
+		return null;
+	}
+	
+	/**
+	 * 券点流水详情事件
+	 * 当商户朋友的券券点发生变动时，微信服务器会推送消息给商户服务器
+	 * <xml>
+	 *  <ToUserName><![CDATA[gh_7223c83d4be5]]></ToUserName>
+	 *  <FromUserName><![CDATA[ob5E7s-HoN9tslQY3-0I4qmgluHk]]></FromUserName>
+	 *  <CreateTime>1453295737</CreateTime>
+	 *  <MsgType><![CDATA[event]]></MsgType>
+	 *  <Event><![CDATA[card_pay_order]]></Event>		事件类型，card_pay_order券点流水详情事件 
+	 *  <OrderId><![CDATA[404091456]]></OrderId>		本次推送对应的订单号 
+	 *  <Status><![CDATA[ORDER_STATUS_FINANCE_SUCC]]></Status>	本次订单号的状态,ORDER_STATUS_WAITING 等待支付 ORDER_STATUS_SUCC 支付成功 ORDER_STATUS_FINANCE_SUCC 加代币成功 ORDER_STATUS_QUANTITY_SUCC 加库存成功 ORDER_STATUS_HAS_REFUND 已退币 ORDER_STATUS_REFUND_WAITING 等待退币确认 ORDER_STATUS_ROLLBACK 已回退,系统失败 ORDER_STATUS_HAS_RECEIPT 已开发票
+	 *  <CreateTime>1453295737</CreateTime>		购买券点时，支付二维码的生成时间 
+	 *  <PayFinishTime>0</PayFinishTime>		购买券点时，实际支付成功的时间 
+	 *  <Desc><![CDATA[]]></Desc>				支付方式，一般为微信支付充值 
+	 *  <FreeCoinCount><![CDATA[200]]></FreeCoinCount>	剩余免费券点数量 
+	 *  <PayCoinCount><![CDATA[0]]></PayCoinCount>		剩余付费券点数量
+	 *  <RefundFreeCoinCount><![CDATA[0]]></RefundFreeCoinCount>	本次变动的免费券点数量 
+	 *  <RefundPayCoinCount><![CDATA[0]]></RefundPayCoinCount>		本次变动的付费券点数量 
+	 *  <OrderType><![CDATA[ORDER_TYPE_SYS_ADD]]></OrderType>	所要拉取的订单类型 ORDER_TYPE_SYS_ADD 平台赠送券点 ORDER_TYPE_WXPAY 充值券点 ORDER_TYPE_REFUND 库存未使用回退券点 ORDER_TYPE_REDUCE 券点兑换库存 ORDER_TYPE_SYS_REDUCE 平台扣减 
+	 *  <Memo><![CDATA[开通账户奖励]]></Memo>	系统备注，说明此次变动的缘由，如开通账户奖励、门店奖励、核销奖励以及充值、扣减。 
+	 *  <ReceiptInfo><![CDATA[]]></ReceiptInfo>	所开发票的详情 
+	 * </xml>	
+	 */
+	protected Object recvCardPayOrder(WXMap msgMap){
+		
+		return null;
+	}
+	
 }
