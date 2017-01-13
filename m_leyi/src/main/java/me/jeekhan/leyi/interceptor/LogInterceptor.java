@@ -1,9 +1,5 @@
 package me.jeekhan.leyi.interceptor;
 
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

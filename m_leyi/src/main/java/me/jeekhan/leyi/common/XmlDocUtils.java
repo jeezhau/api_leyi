@@ -9,7 +9,8 @@ import org.dom4j.Element;
 
 public class XmlDocUtils {
 
-    public void parserXml(String xml) {
+    @SuppressWarnings("rawtypes")
+	public void parserXml(String xml) {
         try {
             Document document = DocumentHelper.parseText(xml);
             Element users = document.getRootElement();

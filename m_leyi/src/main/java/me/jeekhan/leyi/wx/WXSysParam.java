@@ -1,14 +1,7 @@
 package me.jeekhan.leyi.wx;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import me.jeekhan.leyi.common.HttpUtils;
 
 /**
  * 调用微信通用、基础API

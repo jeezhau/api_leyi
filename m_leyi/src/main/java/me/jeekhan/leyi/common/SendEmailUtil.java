@@ -22,13 +22,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory; 
+import javax.mail.internet.MimeUtility; 
 
 public class SendEmailUtil {
-	private static Logger log = LoggerFactory.getLogger(SendEmailUtil.class);
 	private static String username = "zhihuang_2009@163.com";
 	private static String password = "zhaolongbo1248";
 	private static String host = "smtp.163.com";
