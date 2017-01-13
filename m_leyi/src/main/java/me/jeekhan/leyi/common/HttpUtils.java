@@ -45,7 +45,7 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.CharsetUtils;
 import org.apache.http.util.EntityUtils;
 
-import me.jeekhan.leyi.wxapi.WXSysParam;
+import me.jeekhan.leyi.wx.WXSysParam;
 
 /**
  * HTTP 请求工具类

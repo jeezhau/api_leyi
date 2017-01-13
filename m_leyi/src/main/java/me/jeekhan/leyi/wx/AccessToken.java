@@ -1,4 +1,4 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;

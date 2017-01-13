@@ -1,4 +1,4 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

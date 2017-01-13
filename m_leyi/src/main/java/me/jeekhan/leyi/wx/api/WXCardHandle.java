@@ -1,4 +1,4 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx.api;
 
 import java.io.File;
 import java.util.HashMap;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import me.jeekhan.leyi.common.HttpUtils;
+import me.jeekhan.leyi.wx.AccessToken;
 
 public class WXCardHandle {
 	private static Logger log = LoggerFactory.getLogger(WXCardHandle.class);
@@ -32,7 +33,7 @@ public class WXCardHandle {
 	}
 	
 	/**
-	 * 创建卡券
+	 * 创建卡券/朋友券
 	 * @param cardInfo
 	 * @return {"errcode":0,"errmsg":"ok","card_id":"p1Pj9jr90_SQRaVqYI239Ka1erkI"}
 	 */
@@ -605,4 +606,204 @@ public class WXCardHandle {
 		return jsonRet;
 	}
 	
+	/**
+	 * 开通券点账户
+	 * @return
+	 * 	errcode
+	 * 	errmsg
+	 * 	reward	奖励券点数量，以元为单位，微信卡券对每一个新开通券点账户的商户奖励200个券点
+	 */
+	public static JSONObject activateCardPay(){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/activate?access_token=" + token ;
+		log.info("开通券点账户（GET）：" + url );
+		String ret = HttpUtils.doGetSSL(url);
+		log.info("开通券点账户返回（GET）：" + url );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
+	/**
+	 * 对优惠券批价
+	 * 本接口用于提前查询本次新增库存需要多少券点 
+	 * @param card_id	需要来配置库存的card_id 
+	 * @param quantity	本次需要兑换的库存数目 
+	 * @return
+	 * 	order_id:本次批价的订单号，用于下面的确认充值库存接口，仅对当前订单有效且仅可以使用一次，60s内可用于兑换库存
+	 * 	price :本次需要支付的券点总额度
+	 * 	free_coin:本次需要支付的免费券点额度
+	 * 	pay_coin:本次需要支付的付费券点额度 
+	 */
+	public static JSONObject getPayPrice(String card_id,int quantity){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/getpayprice?access_token=" + token ;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("card_id",card_id);
+		jsonObj.put("quantity",quantity);
+		log.info("对优惠券批价（POST）：" + url + "，参数：" + jsonObj);
+		String ret = HttpUtils.doPostSSL(url, jsonObj);
+		log.info("对优惠券批价返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
+	/**
+	 * 查询券点余额
+	 * 本接口用于开发者查询当前券点账户中的免费券点/付费券点数目以及总额。 
+	 * @return
+	 * 	free_coin：免费券点数目 
+	 * 	pay_coin :付费券点数目 
+	 * 	total_coin ：全部券点数目 
+	 */
+	public static JSONObject getCoinsInfo(){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/getcoinsinfo?access_token=" + token ;
+		log.info("查询券点余额（GET）：" + url );
+		String ret = HttpUtils.doGetSSL(url);
+		log.info("查询券点余额返回（GET）：" + url );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
+	/**
+	 * 确认兑换库存
+	 * @param card_id	需要来兑换库存的card_id 
+	 * @param quantity	本次需要兑换的库存数目 
+	 * @param order_id	仅可以使用上面得到的订单号，保证批价有效性 ,获得的order_id须在60s内使用，否则确认兑换库存接口将会失效 
+	 * @return
+	 */
+	public static String getPayConfirm(String card_id,int quantity,String order_id){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/confirm?access_token=" + token ;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("card_id",card_id);
+		jsonObj.put("quantity",quantity);
+		jsonObj.put("order_id",order_id);
+		log.info("确认兑换库存（POST）：" + url + "，参数：" + jsonObj);
+		String ret = HttpUtils.doPostSSL(url, jsonObj);
+		log.info("确认兑换库存返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		if(jsonRet.has("errcode") && jsonRet.getInt("errcode") == 0){
+			return "00";
+		}else{
+			if(jsonRet.has("errmsg")){
+				return jsonRet.getString("errmsg");
+			}else{
+				return "确认兑换库存失败";
+			}
+		}
+	}
+	
+	/**
+	 * 充值券点
+	 * @param coin_count
+	 * @return
+	 * 	order_id:本次支付的订单号，用于查询订单状态
+	 * 	qrcode_url:支付二维码的的链接，开发者可以调用二维码生成的公开库转化为二维码显示在网页上，微信扫码支付 
+	 * 	qrcode_buffer：二维码的数据流，开发者可以使用写入一个文件的方法显示该二维码 
+	 */
+	public static JSONObject reCharge(String coin_count){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/confirm?access_token=" + token ;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("coin_count",coin_count);
+		log.info("充值券点（POST）：" + url + "，参数：" + jsonObj);
+		String ret = HttpUtils.doPostSSL(url, jsonObj);
+		log.info("充值券点返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
+	/**
+	 * 查询充值订单详情
+	 * @param order_id
+	 * @return
+	 * 	order_info 
+	 * 		order_id ：订单号
+	 * 		status ：订单状态，ORDER_STATUS_WAITING 等待支付 ORDER_STATUS_SUCC 支付成功 ORDER_STATUS_FINANCE_SUCC 加代币成功 ORDER_STATUS_QUANTITY_SUCC 加库存成功 ORDER_STATUS_HAS_REFUND 已退币 ORDER_STATUS_REFUND_WAITING 等待退币确认 ORDER_STATUS_ROLLBACK 已回退,系统失败 ORDER_STATUS_HAS_RECEIPT 已开发票 
+	 * 		create_time ：订单创建时间 
+	 * 		pay_finish_time :支付完成时间 
+	 * 		desc :支付描述，一般为微信支付充值 
+	 * 		free_coin_count :本次充值的免费券点数量，以元为单位
+	 * 		pay_coin_count :本次充值的付费券点数量，以元为单位 
+	 * 		refund_free_coin_count :回退的免费券点 
+	 * 		refund_pay_coin_count :回退的付费券点 
+	 * 		openid :支付人的openid 
+	 * 		order_tpye :订单类型，ORDER_TYPE_WXPAY为充值 
+	 */
+	public static JSONObject getReChargeOrder(String order_id){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/confirm?access_token=" + token ;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("order_id",order_id);
+		log.info("查询充值订单详情（POST）：" + url + "，参数：" + jsonObj);
+		String ret = HttpUtils.doPostSSL(url, jsonObj);
+		log.info("查询充值订单详情返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
+	/**
+	 * 查询券点流水详情
+	 * @param offset	分批查询的起点，默认为0 
+	 * @param count		分批查询的数量 
+	 * @param order_type	所要拉取的订单类型 ORDER_TYPE_SYS_ADD 平台赠送 ORDER_TYPE_WXPAY 充值 ORDER_TYPE_REFUND 库存回退券点 ORDER_TYPE_REDUCE 券点兑换库存 ORDER_TYPE_SYS_REDUCE 平台扣减 
+	 * @param begin_time	批量查询订单的起始事件，为时间戳，默认1周前 
+	 * @param end_time		批量查询订单的结束事件，为时间戳，默认为当前时间
+	 * @param notStatuses	不要拉取的订单 状态
+	 * @param sort_key	排序依据，SORT_BY_TIME 以订单时间排序
+	 * @param sort_type	排序规则，SORT_ASC 升序 SORT_DESC 降序 
+	 * @return
+	 */
+	public static JSONObject getOrderList(int offset, int count,String order_type,String begin_time,String end_time,String notStatuses ,String sort_key ,String sort_type){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/pay/confirm?access_token=" + token ;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("offset",offset);
+		jsonObj.put("count",count);
+		jsonObj.put("order_type",order_type);
+		jsonObj.put("begin_time",begin_time);
+		jsonObj.put("end_time",end_time);
+		JSONObject notFilter = new JSONObject();
+		notFilter.put("status",notStatuses);
+		JSONObject sort_info = new JSONObject();
+		sort_info.put("sort_key",sort_key);
+		sort_info.put("sort_type",sort_type);
+		jsonObj.put("nor_filter",notFilter);
+		jsonObj.put("sort_info",sort_info);
+		log.info("查询充值订单详情（POST）：" + url + "，参数：" + jsonObj);
+		String ret = HttpUtils.doPostSSL(url, jsonObj);
+		log.info("查询充值订单详情返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		return jsonRet;
+	}
+	
+	/**
+	 * Mark(占用)Code
+	 * @param card_id	卡券的ID。
+	 * @param openid	用券用户的openid。 
+	 * @param is_mark	是否要mark（占用）这个code，填写true或者false，表示占用或解除占用。 
+	 * @return
+	 */
+	public static String getReChargeOrder(String card_id,String openid ,boolean is_mark){
+		String token = AccessToken.getAccessToken();
+		String url = "https://api.weixin.qq.com/card/code/mark?access_token=" + token ;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("card_id",card_id);
+		jsonObj.put("openid",openid);
+		jsonObj.put("is_mark",is_mark);
+		log.info("Mark(占用)Code（POST）：" + url + "，参数：" + jsonObj);
+		String ret = HttpUtils.doPostSSL(url, jsonObj);
+		log.info("Mark(占用)Code返回：" + ret );
+		JSONObject jsonRet = new JSONObject(ret);
+		if(jsonRet.has("errcode") && jsonRet.getInt("errcode") == 0){
+			return "00";
+		}else{
+			if(jsonRet.has("errmsg")){
+				return jsonRet.getString("errmsg");
+			}else{
+				return "Mark(占用)Code失败";
+			}
+		}
+	}
 }

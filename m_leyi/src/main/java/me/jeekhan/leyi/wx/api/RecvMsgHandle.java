@@ -1,6 +1,6 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx.api;
 
-import java.util.Map;
+import me.jeekhan.leyi.wx.WXMap;
 
 /**
  * 接收微信消息，并作相应的处理
@@ -10,20 +10,7 @@ import java.util.Map;
  *
  */
 public class RecvMsgHandle {
-	//根据接收到的消息的类型做出相应的处理
-	public Object handle(Map<String,String> msgMap){
-		String msgType = msgMap.get("MsgType");
-		if("text".equals(msgType)){
-			//文本消息
-			return recvdText(msgMap);
-		} else if("event".equals(msgType)){
-			//事件消息
-			
-		}
-		return null;
-	}
-	
-	
+		
 	/**
 	 * 接收到文本消息
 	 *  <xml>
@@ -37,9 +24,9 @@ public class RecvMsgHandle {
 	 * @param msgMap
 	 * @return
 	 */
-	protected String recvdText(Map<String,String> msgMap){
+	protected Object recvdText(WXMap msgMap){
 		
-		return "success";
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到文本消息");
 	}
 	
 	/**
@@ -54,9 +41,9 @@ public class RecvMsgHandle {
 	 * <MsgId>1234567890123456</MsgId>						消息id，64位整型 
 	 *  </xml>
 	 */
-	protected Object recvdImage(Map<String,String> msgMap){
+	protected Object recvdImage(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到图片消息");
 	}
 	
 	/**
@@ -74,9 +61,9 @@ public class RecvMsgHandle {
 	 * <MsgId>1234567890123456</MsgId>						消息id，64位整型 
 	 * </xml>
 	 */
-	protected Object recvdVoice(Map<String,String> msgMap){
+	protected Object recvdVoice(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到语音消息");
 	}
 	
 	
@@ -92,9 +79,9 @@ public class RecvMsgHandle {
 	 * <MsgId>1234567890123456</MsgId>						消息id，64位整型 
 	 * </xml>
 	 * 	 */
-	protected Object recvdVideo(Map<String,String> msgMap){
+	protected Object recvdVideo(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到视频消息");
 	}
 	
 	/**
@@ -109,9 +96,9 @@ public class RecvMsgHandle {
 	 * <MsgId>1234567890123456</MsgId>						消息id，64位整型 
 	 * </xml>
 	 */
-	protected Object recvdShortVideo(Map<String,String> msgMap){
+	protected Object recvdShortVideo(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到小视频消息");
 	}
 	
 	/**
@@ -128,9 +115,9 @@ public class RecvMsgHandle {
 	 * <MsgId>1234567890123456</MsgId>						消息id，64位整型 
 	 * </xml>
 	 */
-	protected Object recvdLocation(Map<String,String> msgMap){
+	protected Object recvdLocation(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到地理位置消息");
 	}
 	
 	/**
@@ -148,7 +135,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvdLink(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"收到链接消息");
 	}
 	
 	/**
@@ -174,7 +161,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventSubscribe(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"欢迎您关注");
 	}
 	/**
 	 * 取消关注
@@ -183,7 +170,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventUnsubscribe(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"多谢您的关注，期盼您的再次关注");
 	}
 	
 	/**
@@ -201,7 +188,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventScan(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"您好，感谢您的支持");
 	}
 	
 	/**
@@ -220,7 +207,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventLocation(WXMap msgMap){
 		
-		return null;
+		return RespMsgHandle.respTextMsg(msgMap.getToUser(),"非常感谢您提供的位置信息");
 	}
 	
 	/**
@@ -237,7 +224,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventClick(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -255,7 +242,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventView(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -275,7 +262,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventScancodePush(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -284,7 +271,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventScancodeWaitmsg(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -307,7 +294,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventPicSysphoto(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -316,7 +303,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventPicPhotoOralbum(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -339,7 +326,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventPicWeixin(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -361,11 +348,11 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventLocationSelect(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
-	 * 事件推送群发结果
+	 * 推送群发结果事件
 	 * 1、由于群发任务提交后，群发任务可能在一定时间后才完成，因此，群发接口调用时，仅会给出群发任务是否提交成功的提示，若群发任务提交成功，
 	 * 则在群发任务结束时，会向开发者在公众平台填写的开发者URL（callback URL）推送事件。
 	 * 2、由于群发任务彻底完成需要较长时间，将会在群发任务即将完成的时候，就推送群发结果，此时的推送人数数据将会与实际情形存在一定误差 。
@@ -385,11 +372,11 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventMassSendJobFinish(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
-	 * 事件推送模板消息发送结果
+	 * 推送模板消息发送结果事件
 	 * 在模版消息发送任务完成后，微信服务器会将是否送达成功作为通知
 	 *<xml>
 	 * <ToUserName><![CDATA[gh_7f083739789a]]></ToUserName>		公众号微信号 
@@ -403,7 +390,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvEventTemplateSendJobFinish(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -419,7 +406,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvQualificationVerifySuccess(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -436,7 +423,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvQualificationVerifyFail(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -452,7 +439,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvNamingVerifySuccess(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -469,7 +456,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvNamingVerifyFail(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -485,7 +472,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvAnnualRenew(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -501,7 +488,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvVerifyExpired(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -521,11 +508,11 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvMerchantOrder(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
-	 * 买单事件推送
+	 * 买单推送事件
 	 * <xml>
 	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
 	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
@@ -542,11 +529,11 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUserPay(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
-	 * 用户领取卡券
+	 * 用户领取卡券事件
 	 * <xml>
 	 * <ToUserName><![CDATA[toUser]]></ToUserName>			开发者微信号 
 	 * <FromUserName><![CDATA[FromUser]]></FromUserName>	发送方帐号（一个OpenID，此时发送方是系统帐号） 
@@ -561,7 +548,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUserGetCard(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -577,7 +564,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvCardCheck(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -594,7 +581,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUserDelCard(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -616,7 +603,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUserConsumeCard(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -633,7 +620,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUserViewCard(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -651,7 +638,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUserEnterSessionFromCard(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -670,7 +657,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvUpdateMemberCard(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -688,7 +675,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvCardSkuRemind(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 	/**
@@ -716,7 +703,7 @@ public class RecvMsgHandle {
 	 */
 	protected Object recvCardPayOrder(WXMap msgMap){
 		
-		return null;
+		return "success";
 	}
 	
 }

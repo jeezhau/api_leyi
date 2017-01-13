@@ -1,4 +1,4 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx.api;
 
 import java.io.File;
 

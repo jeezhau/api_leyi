@@ -1,4 +1,4 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx.api;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import me.jeekhan.leyi.common.HttpUtils;
+import me.jeekhan.leyi.wx.AccessToken;
 
 /**
  * 客服消息

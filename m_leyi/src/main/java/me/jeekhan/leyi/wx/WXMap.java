@@ -1,9 +1,7 @@
-package me.jeekhan.leyi.wxapi;
+package me.jeekhan.leyi.wx;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class WXMap {
 	private HashMap<String,Object> map = new HashMap<>();
@@ -22,6 +20,9 @@ public class WXMap {
 	
 	public Object removeKey(String key){
 		return map.remove(key);
+	}
+	public String getToUser(){
+		return map.get("ToUserName").toString();
 	}
 	
 	public void clear(){

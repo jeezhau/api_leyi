@@ -7,14 +7,14 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import me.jeekhan.leyi.common.SunSHAUtils;
-import me.jeekhan.leyi.wxapi.CustomizeMenuHandle;
-import me.jeekhan.leyi.wxapi.WXSysParam;
+import me.jeekhan.leyi.wx.WXMap;
+import me.jeekhan.leyi.wx.WXSysParam;
+import me.jeekhan.leyi.wx.api.CustomizeMenuHandle;
+import me.jeekhan.leyi.wx.api.MsgDispatcher;
 /**
  * 微信
  * @author Jee Khan
@@ -31,7 +33,7 @@ import me.jeekhan.leyi.wxapi.WXSysParam;
  */
 @Controller
 public class WechatAction {
-
+	private static Logger log = LoggerFactory.getLogger(WechatAction.class);
 	
 	/**
 	 * 微信服务器验证
@@ -65,31 +67,39 @@ public class WechatAction {
 		return "fail";
 	}
 	
+	/**
+	 * 接受消息并进行响应
+	 * @param is
+	 * @return
+	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/wx",method=RequestMethod.POST)
 	@ResponseBody
 	public String recvMsg(InputStream is){
 		BufferedReader br;
 		StringBuffer sb = new StringBuffer();
-		Map<String,String> map = new HashMap<>();
+		WXMap map = new WXMap();
 		try {
 			String line = "";
 			br = new BufferedReader(new InputStreamReader(is,"utf-8"));
 			while((line=br.readLine())!=null){
 				sb.append(line);
 			}
-			Document doc = DocumentHelper.parseText(sb.toString());
+			String recvMsg = sb.toString();
+			Document doc = DocumentHelper.parseText(recvMsg);
 			Element xml = doc.getRootElement();
             for (Iterator i = xml.elementIterator(); i.hasNext();) {
                 Element node = (Element) i.next();
                 map.put(node.getName(), node.getText());
-                System.out.println(node.getName() + ":" + node.getText());
             }
-
+            log.info("接受到消息/事件：" + recvMsg);
 		} catch (IOException | DocumentException e) {
 			e.printStackTrace();
 		}
-		return "success";
+		//使用消息分发处理逻辑
+		MsgDispatcher dispatch = new MsgDispatcher();
+		
+		return dispatch.handle(map).toString();
 	}
 
 }
